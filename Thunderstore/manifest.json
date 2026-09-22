@@ -1,0 +1,9 @@
+{
+  "name": "BetterTames",
+  "version_number": "0.8.0",
+  "description": "Taming overhaul: pet protection, tames teleport to you, follow/stay all keys, tames level up from kills, feed from chests, taming/breeding/growth timers, faster taming and breeding. Works with modded creatures. ServerSync.",
+  "website_url": "https://github.com/xtavim/BetterTames",
+  "dependencies": [
+    "denikson-BepInExPack_Valheim-5.4.2350"
+  ]
+}
