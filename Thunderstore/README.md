@@ -22,6 +22,7 @@ A taming overhaul. Tames recover instead of dying, teleport back to you when the
 - A following tame teleports to you when it falls 30m behind **[Configurable]**
 - When you die, every tame that was following you teleports to where you respawn
 - **Left Alt + H** teleports every follower to you **[Configurable]**
+- Following tames come with you into dungeons and back out. Big tames, like lox, wait outside **[Configurable]**
 
 ### 🐺 Commands
 
@@ -121,6 +122,7 @@ Everything below can be changed in-game with Configuration Manager, or in `BepIn
 | Teleport Lost Tames | On | Followers teleport to you when they fall behind or you respawn |
 | Teleport Distance | 30 | Meters a follower can fall behind |
 | Teleport Tames Key | Left Alt + H | Teleport every follower to you |
+| Big Tames Enter Dungeons | **Off** | On lets big tames into dungeons too, where they can get stuck |
 
 ### Leveling
 
@@ -159,7 +161,6 @@ Everything below can be changed in-game with Configuration Manager, or in `BepIn
 
 ## Planned for 1.0
 
-- 🏰 Tames follow you into dungeons
 - 🚪 Tames go through portals with you
 - 🎯 A key to send your tames after what you are looking at
 

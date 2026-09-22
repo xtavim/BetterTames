@@ -19,6 +19,9 @@ namespace BetterTames.Scripts.CatchUp
         private static readonly AccessTools.FieldRef<ZDOMan, Dictionary<ZDOID, ZDO>> AllZDOs =
             AccessTools.FieldRefAccess<ZDOMan, Dictionary<ZDOID, ZDO>>("m_objectsByID");
 
+        private static readonly AccessTools.FieldRef<BaseAI, Pathfinding.AgentType> PathAgent =
+            AccessTools.FieldRefAccess<BaseAI, Pathfinding.AgentType>("m_pathAgentType");
+
         private const float CheckInterval = 2f;
         private static float lastCheck;
 
@@ -46,7 +49,8 @@ namespace BetterTames.Scripts.CatchUp
                 var owner = FindPlayer(name);
                 if (owner == null) continue;
 
-                if (Vector3.Distance(character.transform.position, owner.transform.position) > Plugin.catchUpDistance.Value)
+                if (Vector3.Distance(character.transform.position, owner.transform.position) > Plugin.catchUpDistance.Value &&
+                    CanReach(character, owner))
                     MoveTo(character, owner);
             }
         }
@@ -82,6 +86,7 @@ namespace BetterTames.Scripts.CatchUp
             var count = 0;
             foreach (var character in FollowersOf(player.GetPlayerName()))
             {
+                if (!CanReach(character, player)) continue;
                 MoveTo(character, player);
                 count++;
             }
@@ -113,6 +118,31 @@ namespace BetterTames.Scripts.CatchUp
                 if (player.GetPlayerName() == name) return player;
             }
             return null;
+        }
+
+        // Dungeon interiors sit 5000m above their entrance, so the distance check is what carries a
+        // following tame through the door. Big tames are kept on their own side when that's turned off.
+        private static bool CanReach(Character character, Player player)
+        {
+            if (Plugin.bigTamesEnterDungeons.Value) return true;
+            if (!IsBig(character)) return true;
+            return Character.InInterior(character.transform.position) == Character.InInterior(player.transform.position);
+        }
+
+        private static bool IsBig(Character character)
+        {
+            var ai = character.GetBaseAI();
+            if (ai == null) return false;
+
+            switch (PathAgent(ai))
+            {
+                case Pathfinding.AgentType.Humanoid:
+                case Pathfinding.AgentType.HumanoidNoSwim:
+                case Pathfinding.AgentType.HumanoidAvoidWater:
+                    return false;
+                default:
+                    return true;
+            }
         }
 
         private static void MoveTo(Character character, Player player)
