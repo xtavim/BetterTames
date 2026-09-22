@@ -1,6 +1,6 @@
 # BetterTames
 
-A taming overhaul. Tames recover instead of dying, teleport back to you when they get lost, gain stars from kills and eat from your chests. Adds follow/stay all keys, taming, breeding and growth timers, and settings for taming time, growth time and breeding. Works with every tameable creature, modded ones included, and syncs with ServerSync.
+A taming overhaul. Tames recover instead of dying, come with you through portals and into dungeons, teleport back to you when they get lost, gain stars from kills and eat from your chests. Adds follow/stay all keys, taming, breeding and growth timers, and settings for taming time, growth time and breeding. Works with every tameable creature, modded ones included, and syncs with ServerSync.
 
 ## Features
 
@@ -23,6 +23,7 @@ A taming overhaul. Tames recover instead of dying, teleport back to you when the
 - When you die, every tame that was following you teleports to where you respawn
 - **Left Alt + H** teleports every follower to you **[Configurable]**
 - Following tames come with you into dungeons and back out. Big tames, like lox, wait outside **[Configurable]**
+- Tames near you come through portals with you **[Configurable]**
 
 ### 🐺 Commands
 
@@ -123,6 +124,7 @@ Everything below can be changed in-game with Configuration Manager, or in `BepIn
 | Teleport Distance | 30 | Meters a follower can fall behind |
 | Teleport Tames Key | Left Alt + H | Teleport every follower to you |
 | Big Tames Enter Dungeons | **Off** | On lets big tames into dungeons too, where they can get stuck |
+| Tames Follow Through Portals | On | Followers near a portal come through it with you |
 
 ### Leveling
 
@@ -161,7 +163,6 @@ Everything below can be changed in-game with Configuration Manager, or in `BepIn
 
 ## Planned for 1.0
 
-- 🚪 Tames go through portals with you
 - 🎯 A key to send your tames after what you are looking at
 
 ## Changelog

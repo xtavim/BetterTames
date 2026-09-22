@@ -133,6 +133,8 @@
         <Compile Include="scripts\Commands\CommandPatches.cs" />
         <Compile Include="scripts\CatchUp\CatchUp.cs" />
         <Compile Include="scripts\CatchUp\CatchUpPatches.cs" />
+        <Compile Include="scripts\Portals\Portals.cs" />
+        <Compile Include="scripts\Portals\PortalPatches.cs" />
         <Compile Include="scripts\Leveling\Leveling.cs" />
         <Compile Include="scripts\Leveling\LevelingPatches.cs" />
         <Compile Include="scripts\Feeding\Feeding.cs" />

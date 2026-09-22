@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.0
+
+- Tames near a portal come through it with you
+- Tames follow you into dungeons and back out, with a setting to leave big ones like lox outside
+
 ## 0.8.0
 
 - Tames lie down to recover instead of dying, and enemies leave them alone while they're down. A butcher knife still kills

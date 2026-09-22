@@ -36,6 +36,7 @@ namespace BetterTames
         public static ConfigEntry<float> catchUpDistance;
         public static ConfigEntry<KeyboardShortcut> teleportFollowersKey;
         public static ConfigEntry<bool> bigTamesEnterDungeons;
+        public static ConfigEntry<bool> portalTeleport;
 
         public static ConfigEntry<bool> starUpOnKill;
         public static ConfigEntry<int> starUpBaseChance;
@@ -187,6 +188,10 @@ namespace BetterTames
             bigTamesEnterDungeons = ConfigSync("6 - Teleport", "Big Tames Enter Dungeons", false,
                 new ConfigDescription(
                     "Following tames come with you into dungeons and back out. Turn off to leave big tames, like lox, outside, since they get stuck in narrow corridors."));
+
+            portalTeleport = ConfigSync("6 - Teleport", "Tames Follow Through Portals", true,
+                new ConfigDescription(
+                    "Tames following you near a portal come through it with you. The game normally leaves them behind."));
 
             starUpOnKill = ConfigSync("7 - Leveling", "Gain Stars From Kills", true,
                 new ConfigDescription(

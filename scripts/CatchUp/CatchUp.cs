@@ -22,6 +22,9 @@ namespace BetterTames.Scripts.CatchUp
         private static readonly AccessTools.FieldRef<BaseAI, Pathfinding.AgentType> PathAgent =
             AccessTools.FieldRefAccess<BaseAI, Pathfinding.AgentType>("m_pathAgentType");
 
+        private static readonly Action<ZNetView> ClaimOwnership =
+            AccessTools.MethodDelegate<Action<ZNetView>>(AccessTools.Method(typeof(ZNetView), "ClaimOwnership"));
+
         private const float CheckInterval = 2f;
         private static float lastCheck;
 
@@ -33,25 +36,16 @@ namespace BetterTames.Scripts.CatchUp
             if (localPlayer != null && TakeInput(localPlayer) && Plugin.teleportFollowersKey.Value.IsDown())
                 TeleportFollowers(localPlayer);
 
-            if (Time.time - lastCheck < CheckInterval) return;
+            if (localPlayer == null || Time.time - lastCheck < CheckInterval) return;
             lastCheck = Time.time;
 
-            foreach (var character in Character.GetAllCharacters())
+            // Only our own followers: another player's tames are swept by their own game, so two
+            // clients never move the same creature.
+            foreach (var character in FollowersOf(localPlayer.GetPlayerName()))
             {
-                if (!character.IsTamed() || !character.TryGetComponent(out Tameable tameable)) continue;
-
-                var nview = TameView(tameable);
-                if (nview == null || !nview.IsValid() || !nview.IsOwner()) continue;
-
-                var name = nview.GetZDO().GetString(ZDOVars.s_follow);
-                if (name.Length == 0) continue;
-
-                var owner = FindPlayer(name);
-                if (owner == null) continue;
-
-                if (Vector3.Distance(character.transform.position, owner.transform.position) > Plugin.catchUpDistance.Value &&
-                    CanReach(character, owner))
-                    MoveTo(character, owner);
+                if (Vector3.Distance(character.transform.position, localPlayer.transform.position) > Plugin.catchUpDistance.Value &&
+                    CanReach(character, localPlayer))
+                    MoveTo(character, localPlayer);
             }
         }
 
@@ -97,27 +91,18 @@ namespace BetterTames.Scripts.CatchUp
             player.Message(MessageHud.MessageType.Center, text);
         }
 
-        private static IEnumerable<Character> FollowersOf(string playerName)
+        public static IEnumerable<Character> FollowersOf(string playerName)
         {
             foreach (var character in Character.GetAllCharacters())
             {
                 if (!character.IsTamed() || !character.TryGetComponent(out Tameable tameable)) continue;
 
                 var nview = TameView(tameable);
-                if (nview == null || !nview.IsValid() || !nview.IsOwner()) continue;
+                if (nview == null || !nview.IsValid()) continue;
                 if (nview.GetZDO().GetString(ZDOVars.s_follow) != playerName) continue;
 
                 yield return character;
             }
-        }
-
-        private static Player? FindPlayer(string name)
-        {
-            foreach (var player in Player.GetAllPlayers())
-            {
-                if (player.GetPlayerName() == name) return player;
-            }
-            return null;
         }
 
         // Dungeon interiors sit 5000m above their entrance, so the distance check is what carries a
@@ -145,13 +130,21 @@ namespace BetterTames.Scripts.CatchUp
             }
         }
 
-        private static void MoveTo(Character character, Player player)
+        private static void MoveTo(Character character, Player player) =>
+            MoveTo(character, player.transform.position);
+
+        public static Vector3 MoveTo(Character character, Vector3 target)
         {
-            var position = player.transform.position + RandomOffset();
+            var position = target + RandomOffset();
+
+            // A tame near another player can still be run by them, and only its owner's move sticks.
+            var nview = character.GetComponent<ZNetView>();
+            if (nview != null && nview.IsValid() && !nview.IsOwner()) ClaimOwnership(nview);
 
             character.transform.position = position;
             var body = CharacterBody(character);
             if (body != null) body.position = position;
+            return position;
         }
 
         private static Vector3 RandomOffset()
